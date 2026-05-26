@@ -1,0 +1,41 @@
+services:
+  - type: web
+    name: store-rating-backend
+    runtime: node
+    buildCommand: npm install && npm run build
+    startCommand: node dist/main
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3000
+      - key: DB_HOST
+        fromDatabase:
+          name: store-rating-db
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: store-rating-db
+          property: port
+      - key: DB_USERNAME
+        fromDatabase:
+          name: store-rating-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: store-rating-db
+          property: password
+      - key: DB_DATABASE
+        fromDatabase:
+          name: store-rating-db
+          property: database
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_EXPIRATION
+        value: 24h
+
+databases:
+  - name: store-rating-db
+    databaseName: store_rating_db
+    user: store_rating_user
+    plan: free

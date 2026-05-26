@@ -7,9 +7,13 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const configService = app.get(ConfigService);
 
-  // Enable CORS for Vite frontend
+  // Enable CORS for Vite frontend (localhost dev + GitHub Pages production)
   app.enableCors({
-    origin: ['http://localhost:5173', 'http://127.0.0.1:5173'],
+    origin: [
+      'http://localhost:5173',
+      'http://127.0.0.1:5173',
+      'https://jaggutech24-maker.github.io',
+    ],
     credentials: true,
   });
 
