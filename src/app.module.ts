@@ -21,16 +21,20 @@ import { StoreOwnerModule } from './store-owner/store-owner.module';
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: (configService: ConfigService) => ({
-        type: 'postgres',
-        host: configService.get<string>('DB_HOST', 'localhost'),
-        port: configService.get<number>('DB_PORT', 5432),
-        username: configService.get<string>('DB_USERNAME', 'postgres'),
-        password: configService.get<string>('DB_PASSWORD', 'password'),
-        database: configService.get<string>('DB_DATABASE', 'store_rating_db'),
-        autoLoadEntities: true,
-        synchronize: true, // Auto create tables in development
-      }),
+      useFactory: (configService: ConfigService) => {
+        const isProd = configService.get<string>('NODE_ENV') === 'production';
+        return {
+          type: 'postgres',
+          host: configService.get<string>('DB_HOST', 'localhost'),
+          port: configService.get<number>('DB_PORT', 5432),
+          username: configService.get<string>('DB_USERNAME', 'postgres'),
+          password: configService.get<string>('DB_PASSWORD', 'password'),
+          database: configService.get<string>('DB_DATABASE', 'store_rating_db'),
+          autoLoadEntities: true,
+          synchronize: !isProd, // Auto create tables in development, but disable in prod for safety
+          ssl: isProd ? { rejectUnauthorized: false } : false,
+        };
+      },
     }),
     AuthModule,
     UsersModule,
