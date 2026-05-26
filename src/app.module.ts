@@ -31,7 +31,7 @@ import { StoreOwnerModule } from './store-owner/store-owner.module';
           password: configService.get<string>('DB_PASSWORD', 'password'),
           database: configService.get<string>('DB_DATABASE', 'store_rating_db'),
           autoLoadEntities: true,
-          synchronize: !isProd, // Auto create tables in development, but disable in prod for safety
+          synchronize: true, // Always synchronize to auto-create tables on first run
           ssl: isProd ? { rejectUnauthorized: false } : false,
         };
       },
